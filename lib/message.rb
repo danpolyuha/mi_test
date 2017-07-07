@@ -4,9 +4,9 @@ require "services/answer_checker"
 
 class Message
 
-  def initialize text_template:, answer_pattern:, user:
+  def initialize text_template:, answer_pattern_template:, user:
     self.text_template = text_template
-    self.answer_pattern = answer_pattern
+    self.answer_pattern_template = answer_pattern_template
     self.user = user
   end
 
@@ -20,14 +20,14 @@ class Message
 
   private
 
-  attr_accessor :text_template, :answer_pattern, :user
+  attr_accessor :text_template, :answer_pattern_template, :user
 
   def acceptable_answer? answer
     answer_checker.acceptable_answer?(answer)
   end
 
   def answer_format_mismatch_message
-    "Provided answer can not be accepted. Please follow answer format: #{answer_checker.pattern.inspect}"
+    "Provided answer can not be accepted. Please follow answer format: #{answer_checker.answer_pattern.inspect}"
   end
 
   def text_generator
@@ -35,7 +35,7 @@ class Message
   end
 
   def answer_checker
-    @answer_checker ||= AnswerChecker.new(answer_pattern: answer_pattern, user: user)
+    @answer_checker ||= AnswerChecker.new(answer_pattern_template: answer_pattern_template, user: user)
   end
 
 end

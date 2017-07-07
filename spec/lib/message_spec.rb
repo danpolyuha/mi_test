@@ -2,9 +2,11 @@ require "message"
 
 RSpec.describe Message do
 
-  let(:message) { described_class.new(text_template: text_template, answer_pattern: answer_pattern, user: user) }
+  let(:message) { described_class.new(text_template: text_template,
+                                      answer_pattern_template: answer_pattern_template,
+                                      user: user) }
   let(:text_template) { "Hello!" }
-  let(:answer_pattern) { /yes|no/ }
+  let(:answer_pattern_template) { /yes|no/ }
   let(:user) { double }
 
   describe "#get_text" do
@@ -19,7 +21,7 @@ RSpec.describe Message do
   describe "#process_answer" do
 
     describe "checking the answer" do
-      let(:answer_checker) { double(acceptable_answer?: false, pattern: answer_pattern) }
+      let(:answer_checker) { double(acceptable_answer?: false, pattern: answer_pattern_template) }
       let(:result) { message.process_answer("maybe") }
 
       it "returns failure is checking fails" do
@@ -27,7 +29,7 @@ RSpec.describe Message do
       end
 
       it "returns error message" do
-        expect(result.error_message).to include(answer_pattern.inspect)
+        expect(result.error_message).to include(answer_pattern_template.inspect)
       end
     end
 

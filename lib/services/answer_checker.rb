@@ -1,28 +1,28 @@
 class AnswerChecker
 
-  def initialize answer_pattern:, user:
-    self.answer_pattern = answer_pattern
+  def initialize answer_pattern_template:, user:
+    self.answer_pattern_template = answer_pattern_template
     self.user = user
   end
 
-  def pattern
-    type = pattern_type
+  def answer_pattern
+    type = template_type
     method = extractor_method_name(type)
     return send(method) if extractor_exists?(method)
 
-    raise RuntimeError, "#{type} is invalid answer pattern type."
+    raise RuntimeError, "#{type} is invalid answer pattern template type."
   end
 
   def acceptable_answer? answer
-    answer =~ pattern
+    answer =~ answer_pattern
   end
 
   private
 
-  attr_accessor :answer_pattern, :user
+  attr_accessor :answer_pattern_template, :user
 
-  def pattern_type
-    @pattern_type ||= answer_pattern.class.name.downcase
+  def template_type
+    @template_type ||= answer_pattern_template.class.name.downcase
   end
 
   def extractor_method_name type
@@ -36,11 +36,11 @@ class AnswerChecker
   # extractors
 
   def extract_from_regexp
-    answer_pattern
+    answer_pattern_template
   end
 
   def extract_from_proc
-    answer_pattern.call(user)
+    answer_pattern_template.call(user)
   end
 
 end
