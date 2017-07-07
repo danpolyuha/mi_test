@@ -1,4 +1,4 @@
-require 'services/message_text_generator'
+require "services/message_text_generator"
 
 RSpec.describe MessageTextGenerator do
 

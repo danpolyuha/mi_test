@@ -18,7 +18,7 @@ class MessageTextGenerator
   attr_accessor :text_template, :user
 
   def template_type
-    text_template.class.name.downcase
+    @template_type ||= text_template.class.name.downcase
   end
 
   def generator_method_name(type)
@@ -32,11 +32,11 @@ class MessageTextGenerator
   #generators
 
   def generate_for_string
-    @text_template
+    text_template
   end
 
   def generate_for_proc
-    @text_template.call(@user)
+    text_template.call(user)
   end
 
 end
