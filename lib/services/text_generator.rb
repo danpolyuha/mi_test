@@ -1,4 +1,4 @@
-class MessageTextGenerator
+class TextGenerator
 
   def initialize text_template:, user:
     self.text_template = text_template
@@ -29,7 +29,7 @@ class MessageTextGenerator
     respond_to?(method, true)
   end
 
-  #generators
+  # generators
 
   def generate_for_string
     text_template

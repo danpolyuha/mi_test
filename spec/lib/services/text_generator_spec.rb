@@ -1,6 +1,6 @@
-require "services/message_text_generator"
+require "services/text_generator"
 
-RSpec.describe MessageTextGenerator do
+RSpec.describe TextGenerator do
 
   let(:generator) { described_class.new(text_template: text_template, user: user) }
 
