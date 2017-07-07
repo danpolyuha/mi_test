@@ -2,6 +2,7 @@ require "rezult"
 require "services/text_generator"
 require "services/answer_checker"
 require "services/data_assigner"
+require "services/next_message_resolver"
 
 class Message
 
@@ -10,6 +11,7 @@ class Message
     self.answer_pattern_template = answer_pattern_template
     self.assigner = assigner
     self.user = user
+    self.flow = {}
   end
 
   def get_text
@@ -20,11 +22,17 @@ class Message
     return Rezult.fail(answer_format_mismatch_message) unless acceptable_answer?(answer)
 
     data_assigner.assign(answer)
+    next_message = next_message_resolver.get_next_message(answer)
+    Rezult.success(next_message: next_message)
+  end
+
+  def add_to_flow answer, item
+    flow[answer] = item
   end
 
   private
 
-  attr_accessor :text_template, :answer_pattern_template, :assigner, :user
+  attr_accessor :text_template, :answer_pattern_template, :assigner, :flow, :user
 
   def acceptable_answer? answer
     answer_checker.acceptable_answer?(answer)
@@ -44,6 +52,10 @@ class Message
 
   def data_assigner
     @data_assigner ||= DataAssigner.new(assigner: assigner, user: user)
+  end
+
+  def next_message_resolver
+    @next_message_resolver ||= NextMessageResolver.new(flow: flow, user: user)
   end
 
 end

@@ -37,17 +37,29 @@ RSpec.describe Message do
       end
     end
 
-    context "assigning data" do
+    describe "assigning data" do
       let(:data_assigner) { double(assign: nil) }
 
       it "assigns input data" do
         data = "John"
+        message.add_to_flow(data, double("class" => Message))
         allow(message).to receive(:acceptable_answer?).and_return(true)
         expect(message).to receive(:data_assigner).and_return(data_assigner)
         expect(data_assigner).to receive(:assign).with(data)
         message.process_answer(data)
       end
     end
+
+    describe "returning next message" do
+      let(:next_message) { double }
+      let(:next_message_resolver) { double(get_next_message: next_message) }
+
+      it "returns next message in flow" do
+        allow(message).to receive(:next_message_resolver).and_return(next_message_resolver)
+        expect(message.process_answer("yes").next_message).to eq(next_message)
+      end
+    end
+
 
   end
 
