@@ -1,4 +1,5 @@
 require "services/next_message_resolver"
+require "utilities/regexp_hash"
 
 RSpec.describe NextMessageResolver do
 
@@ -6,9 +7,14 @@ RSpec.describe NextMessageResolver do
   let(:name) { "Paul" }
 
   let(:messages) { build_list(:message, 2) }
-  let(:flow) { {"answer1" => messages[0],
-                "answer2" => ->(user) { user.name == name ? messages[1] : "blabla" },
-                "answer3" => 45} }
+  let(:flow) do
+    flow = RegexpHash.new
+    flow.merge!(
+        /answer1/ => messages[0],
+        /answer2/ => ->(user) { user.name == name ? messages[1] : "blabla" },
+        /answer3/ => 45
+    )
+  end
 
   describe "#get_next_message" do
     it "raises exception when answer is not recognized" do

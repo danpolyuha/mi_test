@@ -9,8 +9,8 @@ RSpec.describe Message do
                         user: user) }
 
   let(:text_template) { "blablabla" }
-  let(:answer_pattern_template) { /[A-Za-z]+/ }
-  let(:assigner) { :name }
+  let(:answer_pattern_template) { nil }
+  let(:assigner) { nil }
   let(:user) { build(:user) }
 
   describe "#get_text" do
@@ -22,6 +22,7 @@ RSpec.describe Message do
   describe "#process_answer" do
 
     context "when answer doesn't meet pattern" do
+      let(:answer_pattern_template) { /[A-Za-z]+/ }
       let(:result) { message.process_answer("1234") }
 
       it "returns failure" do
@@ -33,11 +34,13 @@ RSpec.describe Message do
       end
     end
 
-    context "when answer meets pattern" do
+    context "when answer is fine" do
       let(:name) { "Paul" }
       let(:next_message) { build(:message) }
+      let(:assigner) { :name }
+
       before do
-        message.add_to_flow(name => next_message)
+        message.add_to_flow(/#{name}/ => next_message)
       end
 
       it "properly assigns data to user" do

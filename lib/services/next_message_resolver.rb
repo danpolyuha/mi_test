@@ -15,7 +15,7 @@ class NextMessageResolver
   attr_accessor :flow, :user
 
   def get_next_message_template(answer)
-    result = flow[answer]
+    result = flow.match(answer)
     return result if result
 
     raise RuntimeError, "'#{answer}' is not acceptable answer in this case."

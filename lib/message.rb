@@ -1,17 +1,19 @@
 require "rezult"
+
 require "services/text_generator"
 require "services/answer_checker"
 require "services/data_assigner"
 require "services/next_message_resolver"
+require "utilities/regexp_hash"
 
 class Message
 
-  def initialize text_template:, answer_pattern_template:, assigner:, user:
+  def initialize text_template:, answer_pattern_template: nil, assigner: nil, user:
     self.text_template = text_template
     self.answer_pattern_template = answer_pattern_template
     self.assigner = assigner
     self.user = user
-    self.flow = {}
+    self.flow = RegexpHash.new
   end
 
   def get_text
@@ -21,7 +23,7 @@ class Message
   def process_answer answer
     return Rezult.fail(answer_format_mismatch_message) unless acceptable_answer?(answer)
 
-    data_assigner.assign(answer)
+    assign_data(answer)
     Rezult.success(next_message: get_next_message(answer))
   end
 
@@ -34,7 +36,19 @@ class Message
   attr_accessor :text_template, :answer_pattern_template, :assigner, :flow, :user
 
   def acceptable_answer? answer
-    answer_checker.acceptable_answer?(answer)
+    should_check_answer? ? answer_checker.acceptable_answer?(answer) : true
+  end
+
+  def should_check_answer?
+    answer_pattern_template
+  end
+
+  def assign_data(answer)
+    data_assigner.assign(answer) if should_assign_data?
+  end
+
+  def should_assign_data?
+    assigner
   end
 
   def answer_format_mismatch_message
