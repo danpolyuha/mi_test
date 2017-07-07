@@ -27,6 +27,14 @@ RSpec.describe DataAssigner do
       end
     end
 
+    context "when assigner type is not supported" do
+      let(:assigner) { 34 }
+
+      it "raises exception" do
+        expect{data_assigner.assign data}.to raise_error(RuntimeError)
+      end
+    end
+
   end
 
 end

@@ -44,13 +44,23 @@ RSpec.describe AnswerChecker do
       end
     end
 
-    context "when answer_pattern is complex" do
+    context "when answer_pattern_template is complex" do
       let(:phone_pattern) { /\d+/ }
       let(:answer_pattern_template) { ->(user) { user.contact_method == "phone" ? phone_pattern : /\w+/ } }
 
       describe "#answer_pattern" do
         it "correctly finds needed pattern" do
           expect(checker.answer_pattern).to eq(phone_pattern)
+        end
+      end
+    end
+
+    context "when answer_pattern_template type is not supported" do
+      let(:answer_pattern_template) { 55 }
+
+      describe "#answer_pattern" do
+        it "raises exception" do
+          expect{checker.answer_pattern}.to raise_error(RuntimeError)
         end
       end
     end

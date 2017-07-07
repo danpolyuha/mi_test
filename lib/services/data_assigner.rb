@@ -29,7 +29,7 @@ class DataAssigner
     respond_to?(method, true)
   end
 
-  # generators
+  # assigners
 
   def assign_with_symbol data
     method = "#{assigner}="
