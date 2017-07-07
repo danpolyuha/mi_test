@@ -2,9 +2,9 @@ require "services/answer_checker"
 
 RSpec.describe AnswerChecker do
 
-  let(:checker) { described_class.new(user: user, answer_pattern_template: answer_pattern_template) }
-
-  let(:user) { double(contact_method: "phone") }
+  let(:checker) { described_class.new(user: build(:user, name: name),
+                                      answer_pattern_template: answer_pattern_template) }
+  let(:name) { "Paul" }
 
   describe "#acceptable_answer?" do
 
@@ -21,8 +21,7 @@ RSpec.describe AnswerChecker do
     end
 
     context "when answer_pattern is complex" do
-      let(:phone_pattern) { /\d+/ }
-      let(:answer_pattern_template) { ->(user) { user.contact_method == "phone" ? phone_pattern : /\w+/ } }
+      let(:answer_pattern_template) { ->(user) { user.name == name ? /\d+/ : /\w+/ } }
 
       it "returns true when answer matches" do
         expect(checker.acceptable_answer?("12345")).to be_truthy
@@ -46,7 +45,7 @@ RSpec.describe AnswerChecker do
 
     context "when answer_pattern_template is complex" do
       let(:phone_pattern) { /\d+/ }
-      let(:answer_pattern_template) { ->(user) { user.contact_method == "phone" ? phone_pattern : /\w+/ } }
+      let(:answer_pattern_template) { ->(user) { user.name == name ? phone_pattern : /\w+/ } }
 
       describe "#answer_pattern" do
         it "correctly finds needed pattern" do

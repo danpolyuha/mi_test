@@ -6,11 +6,10 @@ class TextGenerator
   end
 
   def generate
-    type = template_type
-    method = generator_method_name(type)
+    method = generator_method_name(template_type)
     return send(method) if generator_exists?(method)
 
-    raise RuntimeError, "#{type} is invalid message text template type."
+    raise RuntimeError, "#{template_type} is invalid message text template type."
   end
 
   private

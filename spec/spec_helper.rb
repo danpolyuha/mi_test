@@ -1,3 +1,5 @@
+require 'factory_girl'
+
 RSpec.configure do |config|
 
   config.expect_with :rspec do |expectations|
@@ -16,6 +18,12 @@ RSpec.configure do |config|
 
   if config.files_to_run.one?
     config.default_formatter = "doc"
+  end
+
+  config.include FactoryGirl::Syntax::Methods
+
+  config.before(:suite) do
+    FactoryGirl.find_definitions
   end
 
 end

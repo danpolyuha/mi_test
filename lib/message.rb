@@ -22,12 +22,11 @@ class Message
     return Rezult.fail(answer_format_mismatch_message) unless acceptable_answer?(answer)
 
     data_assigner.assign(answer)
-    next_message = next_message_resolver.get_next_message(answer)
-    Rezult.success(next_message: next_message)
+    Rezult.success(next_message: get_next_message(answer))
   end
 
-  def add_to_flow answer, item
-    flow[answer] = item
+  def add_to_flow hash
+    flow.merge!(hash)
   end
 
   private
@@ -40,6 +39,10 @@ class Message
 
   def answer_format_mismatch_message
     "Provided answer can not be accepted. Please follow answer format: #{answer_checker.answer_pattern.inspect}"
+  end
+
+  def get_next_message(answer)
+    next_message_resolver.get_next_message(answer)
   end
 
   def text_generator

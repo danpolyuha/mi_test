@@ -2,18 +2,13 @@ require "services/next_message_resolver"
 
 RSpec.describe NextMessageResolver do
 
-  let(:resolver) { described_class.new(flow: flow, user: user) }
+  let(:resolver) { described_class.new(flow: flow, user: build(:user, name: name)) }
+  let(:name) { "Paul" }
 
-  let(:user) { double(name: "John") }
-  let(:message1) { double("class" => Message) }
-  let(:message2) { double("class" => Message) }
-  let(:message3) { double("class" => Message) }
-  let(:answer1) { "answer1" }
-  let(:answer2) { "answer2" }
-  let(:answer3) { "answer3" }
-  let(:flow) { {answer1 => message1,
-                answer2 => ->(user) { user.name == "John" ? message2 : message3 },
-                answer3 => 45} }
+  let(:messages) { build_list(:message, 2) }
+  let(:flow) { {"answer1" => messages[0],
+                "answer2" => ->(user) { user.name == name ? messages[1] : "blabla" },
+                "answer3" => 45} }
 
   describe "#get_next_message" do
     it "raises exception when answer is not recognized" do
@@ -21,15 +16,15 @@ RSpec.describe NextMessageResolver do
     end
 
     it "returns corresponding message when next message is strictly defined" do
-      expect(resolver.get_next_message(answer1)).to eq(message1)
+      expect(resolver.get_next_message("answer1")).to eq(messages[0])
     end
 
     it "returns correct message when flow has complex logic" do
-      expect(resolver.get_next_message(answer2)).to eq(message2)
+      expect(resolver.get_next_message("answer2")).to eq(messages[1])
     end
 
     it "raises exception when flow item type is not supported" do
-      expect{resolver.get_next_message(answer3)}.to raise_error(RuntimeError)
+      expect{resolver.get_next_message("answer3")}.to raise_error(RuntimeError)
     end
   end
 

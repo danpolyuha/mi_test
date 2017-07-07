@@ -2,65 +2,52 @@ require "message"
 
 RSpec.describe Message do
 
-  let(:message) { described_class.new(text_template: text_template,
-                                      answer_pattern_template: answer_pattern_template,
-                                      assigner: assigner,
-                                      user: user) }
-  let(:text_template) { "Hello!" }
-  let(:answer_pattern_template) { /yes|no/ }
-  let(:user) { double("name=": nil) }
+  let(:message) { build(:message,
+                        text_template: text_template,
+                        answer_pattern_template: answer_pattern_template,
+                        assigner: assigner,
+                        user: user) }
+
+  let(:text_template) { "blablabla" }
+  let(:answer_pattern_template) { /[A-Za-z]+/ }
   let(:assigner) { :name }
+  let(:user) { build(:user) }
 
   describe "#get_text" do
-    let(:text_generator) { double(generate: text_template) }
-
     it "returns generated text" do
-      expect(message).to receive(:text_generator).and_return(text_generator)
       expect(message.get_text).to eq(text_template)
     end
   end
 
   describe "#process_answer" do
 
-    describe "checking the answer" do
-      let(:answer_checker) { double(acceptable_answer?: false, answer_pattern: answer_pattern_template) }
-      let(:result) { message.process_answer("maybe") }
+    context "when answer doesn't meet pattern" do
+      let(:result) { message.process_answer("1234") }
 
-      it "returns failure is checking fails" do
-        expect(message).to receive(:answer_checker).at_least(:once).and_return(answer_checker)
+      it "returns failure" do
         expect(result.success?).to be_falsey
       end
 
       it "returns error message" do
-        expect(message).to receive(:answer_checker).at_least(:once).and_return(answer_checker)
         expect(result.error_message).to include(answer_pattern_template.inspect)
       end
     end
 
-    describe "assigning data" do
-      let(:data_assigner) { double(assign: nil) }
-
-      it "assigns input data" do
-        data = "John"
-        message.add_to_flow(data, double("class" => Message))
-        allow(message).to receive(:acceptable_answer?).and_return(true)
-        expect(message).to receive(:data_assigner).and_return(data_assigner)
-        expect(data_assigner).to receive(:assign).with(data)
-        message.process_answer(data)
+    context "when answer meets pattern" do
+      let(:name) { "Paul" }
+      let(:next_message) { build(:message) }
+      before do
+        message.add_to_flow(name => next_message)
       end
-    end
 
-    describe "returning next message" do
-      let(:next_message) { double }
-      let(:next_message_resolver) { double(get_next_message: next_message) }
+      it "properly assigns data to user" do
+        expect{message.process_answer(name)}.to change{user.name}.to(name)
+      end
 
       it "returns next message in flow" do
-        allow(message).to receive(:next_message_resolver).and_return(next_message_resolver)
-        expect(message.process_answer("yes").next_message).to eq(next_message)
+        expect(message.process_answer(name).next_message).to eq(next_message)
       end
     end
 
-
   end
-
 end

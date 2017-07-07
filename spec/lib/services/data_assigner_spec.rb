@@ -4,7 +4,7 @@ RSpec.describe DataAssigner do
 
   let(:data_assigner) { described_class.new(assigner: assigner, user: user) }
 
-  let(:user) { double }
+  let(:user) { build(:user) }
   let(:data) { "John" }
 
   describe "#assign" do

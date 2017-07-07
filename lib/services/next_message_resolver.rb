@@ -6,19 +6,28 @@ class NextMessageResolver
   end
 
   def get_next_message answer
-    next_message_template = flow[answer]
-    raise RuntimeError, "'#{answer}' is not acceptable answer in this case." unless next_message_template
+    next_message_template = get_next_message_template(answer)
+    resolve_message next_message_template
+  end
 
+  private
+
+  attr_accessor :flow, :user
+
+  def get_next_message_template(answer)
+    result = flow[answer]
+    return result if result
+
+    raise RuntimeError, "'#{answer}' is not acceptable answer in this case."
+  end
+
+  def resolve_message(next_message_template)
     type = template_type(next_message_template)
     method = resolver_method_name(type)
     return send(method, next_message_template) if resolver_exists?(method)
 
     raise RuntimeError, "#{type} is invalid flow item type."
   end
-
-  private
-
-  attr_accessor :flow, :user
 
   def template_type template
     template.class.name.downcase

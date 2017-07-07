@@ -6,11 +6,10 @@ class DataAssigner
   end
 
   def assign data
-    type = assigner_type
-    method = assigner_method_name(type)
+    method = assigner_method_name(assigner_type)
     return send(method, data) if assigner_exists?(method)
 
-    raise RuntimeError, "#{type} is invalid assigner type."
+    raise RuntimeError, "#{assigner_type} is invalid assigner type."
   end
 
   private

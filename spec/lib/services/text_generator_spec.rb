@@ -2,10 +2,8 @@ require "services/text_generator"
 
 RSpec.describe TextGenerator do
 
-  let(:generator) { described_class.new(text_template: text_template, user: user) }
-
-  let(:user_name) { "John" }
-  let(:user) { double(name: user_name) }
+  let(:generator) { described_class.new(text_template: text_template, user: build(:user, name: name)) }
+  let(:name) { "John" }
 
   describe "#generate" do
 
@@ -18,10 +16,10 @@ RSpec.describe TextGenerator do
     end
 
     context "when interpolation has to be used" do
-      let(:text_template) { ->(user) { "Paul, #{user.name}, and Goerge" } }
+      let(:text_template) { ->(user) { "Paul, #{user.name}, and George" } }
 
       it "returns template itself" do
-        expect(generator.generate).to eq("Paul, John, and Goerge")
+        expect(generator.generate).to eq("Paul, John, and George")
       end
     end
 

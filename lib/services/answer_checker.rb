@@ -6,11 +6,10 @@ class AnswerChecker
   end
 
   def answer_pattern
-    type = template_type
-    method = extractor_method_name(type)
+    method = extractor_method_name(template_type)
     return send(method) if extractor_exists?(method)
 
-    raise RuntimeError, "#{type} is invalid answer pattern template type."
+    raise RuntimeError, "#{template_type} is invalid answer pattern template type."
   end
 
   def acceptable_answer? answer
