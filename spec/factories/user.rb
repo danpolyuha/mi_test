@@ -1,6 +1,13 @@
 # temporary
 require "ostruct"
 class User < OpenStruct
+  def add_message m
+    @m = m
+  end
+
+  def last_message
+    @m
+  end
 end
 # /temporary
 

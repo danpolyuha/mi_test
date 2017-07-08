@@ -1,78 +1,55 @@
 require "rezult"
 
-require "services/text_generator"
-require "services/answer_checker"
-require "services/data_assigner"
-require "services/next_message_resolver"
-require "utilities/regexp_hash"
-
 class Message
 
-  def initialize text_template:, answer_pattern_template: nil, assigner: nil, user:
-    self.text_template = text_template
-    self.answer_pattern_template = answer_pattern_template
-    self.assigner = assigner
+  attr_accessor :next_message_resolver
+
+  def initialize text_resolver:, answer_pattern_resolver: nil, assigner_resolver: nil, user:
+    self.text_resolver = text_resolver
+    self.answer_pattern_resolver = answer_pattern_resolver
+    self.assigner_resolver = assigner_resolver
     self.user = user
-    self.flow = RegexpHash.new
   end
 
   def get_text
-    text_generator.generate
+    text_resolver.call(user)
   end
 
   def process_answer answer
-    return Rezult.fail(answer_format_mismatch_message) unless acceptable_answer?(answer)
+    answer_pattern = get_answer_pattern
+    return answer_format_failure(answer_pattern) unless acceptable_answer?(answer, answer_pattern)
 
     assign_data(answer)
-    Rezult.success(next_message: get_next_message(answer))
-  end
-
-  def add_to_flow hash
-    flow.merge!(hash)
+    Rezult.success(next_message: get_next_message)
   end
 
   private
 
-  attr_accessor :text_template, :answer_pattern_template, :assigner, :flow, :user
+  attr_accessor :text_resolver, :answer_pattern_resolver, :assigner_resolver, :flow, :user
 
-  def acceptable_answer? answer
-    should_check_answer? ? answer_checker.acceptable_answer?(answer) : true
+  def get_answer_pattern
+    answer_pattern_resolver&.call(user)
   end
 
-  def should_check_answer?
-    answer_pattern_template
+  def answer_format_failure pattern
+    Rezult.fail "Provided answer can not be accepted. Please follow answer format: #{pattern.inspect}"
   end
 
-  def assign_data(answer)
-    data_assigner.assign(answer) if should_assign_data?
+  def acceptable_answer? answer, pattern
+    return true unless pattern
+
+    raise RuntimeError, "Answer pattern must respond do 'match?'" unless pattern.respond_to?(:match?)
+
+    pattern.match?(answer)
   end
 
-  def should_assign_data?
-    assigner
+  def assign_data answer
+    assigner_resolver&.call(user, answer)
+    user.add_message(answer)
   end
 
-  def answer_format_mismatch_message
-    "Provided answer can not be accepted. Please follow answer format: #{answer_checker.answer_pattern.inspect}"
-  end
-
-  def get_next_message(answer)
-    next_message_resolver.get_next_message(answer)
-  end
-
-  def text_generator
-    @text_generator ||= TextGenerator.new(text_template: text_template, user: user)
-  end
-
-  def answer_checker
-    @answer_checker ||= AnswerChecker.new(answer_pattern_template: answer_pattern_template, user: user)
-  end
-
-  def data_assigner
-    @data_assigner ||= DataAssigner.new(assigner: assigner, user: user)
-  end
-
-  def next_message_resolver
-    @next_message_resolver ||= NextMessageResolver.new(flow: flow, user: user)
+  def get_next_message
+    next_message_resolver&.call(user)
   end
 
 end
