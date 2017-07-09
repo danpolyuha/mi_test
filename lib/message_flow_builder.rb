@@ -20,14 +20,14 @@ class MessageFlowBuilder
 
   attr_accessor :user, :messages, :flow
 
-  def message key, text:, answer_pattern: nil, assigner: nil, next_message: nil
-    messages[key] = create_message(text, answer_pattern, assigner)
+  def message key, text:, reply_pattern: nil, assigner: nil, next_message: nil
+    messages[key] = create_message(text, reply_pattern, assigner)
     flow[key] = next_message if next_message
   end
 
-  def create_message text, answer_pattern, assigner
+  def create_message text, reply_pattern, assigner
     Message.new text_resolver: Caller.new(text),
-                answer_pattern_resolver: answer_pattern ? Caller.new(answer_pattern) : nil,
+                reply_pattern_resolver: reply_pattern ? Caller.new(reply_pattern) : nil,
                 assigner_resolver: assigner ? Assigner.new(assigner) : nil,
                 user: user
   end
