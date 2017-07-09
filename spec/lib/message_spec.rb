@@ -4,7 +4,7 @@ require "services/assigner"
 
 RSpec.describe Message do
 
-  let(:message) { Message.new(
+  let(:message) { described_class.new(
                         text_resolver: text_resolver,
                         answer_pattern_resolver: answer_pattern_resolver,
                         assigner_resolver: assigner_resolver,
@@ -14,7 +14,7 @@ RSpec.describe Message do
   let(:text_resolver) { Caller.new(text) }
   let(:answer_pattern_resolver) { nil }
   let(:assigner_resolver) { nil }
-  let(:user) { build(:user) }
+  let(:user) { create(:user) }
 
   describe "#get_text" do
     it "returns generated text" do
@@ -56,7 +56,7 @@ RSpec.describe Message do
 
       it "adds message to user messages" do
         message.process_answer(name)
-        expect(user.last_message).to eq(name)
+        expect(user.last_line.text).to eq(name)
       end
 
       it "returns next message in flow" do

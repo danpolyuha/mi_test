@@ -2,11 +2,11 @@ require "services/assigner"
 
 RSpec.describe Assigner do
 
-  let(:assigner) { Assigner.new(attribute) }
+  let(:assigner) { described_class.new(attribute) }
 
   describe "#call" do
     let(:name) { "Paul" }
-    let(:user) { build(:user) }
+    let(:user) { create(:user) }
 
     context "when attribute is symbol" do
       let(:attribute) { :name }

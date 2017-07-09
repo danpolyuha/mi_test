@@ -2,7 +2,7 @@ require "services/caller"
 
 RSpec.describe Caller do
 
-  let(:caller) { Caller.new(callee) }
+  let(:caller) { described_class.new(callee) }
   let(:result) { "result" }
 
   describe "#call" do

@@ -6,7 +6,7 @@ RSpec.describe MessageFlowBuilder do
     described_class.new(user, &scenario)
   end
 
-  let(:user) { build(:user, name: "John") }
+  let(:user) { create(:user, name: "John") }
 
   describe "DSL parsing" do
 
