@@ -45,6 +45,7 @@ class Message
 
   def assign_data reply
     assigner_resolver&.call(user, reply)
+    user.save
     user.add_line(reply)
   end
 

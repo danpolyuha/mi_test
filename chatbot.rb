@@ -10,5 +10,5 @@ text = processor.current_text
 while text do
   puts text
   reply = gets
-  text = processor.reply(reply)
+  text = processor.reply(reply.chomp)
 end
