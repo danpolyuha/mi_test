@@ -22,6 +22,11 @@ RSpec.describe Processor do
     it "processes reply and returns new message" do
       expect(bot.reply("hi")).to eq("Good bye!")
     end
+
+    it "saves all bot and user lines" do
+      bot.reply("hi")
+      expect(User.last.lines.collect(&:text)).to eq(["BOT: Hello!", "USER: hi", "BOT: Good bye!"])
+    end
   end
 
 end
