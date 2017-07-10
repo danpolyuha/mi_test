@@ -1,11 +1,11 @@
-require "active_record"
-
 require_relative "config"
 require_relative "bot"
 
 class Initializer
 
   def self.go scenario_name
+    load_bundle
+
     init_db
     load_models
     load_scenarios
@@ -15,6 +15,11 @@ class Initializer
   end
 
   private
+
+  def self.load_bundle
+    require "bundler/setup"
+    Bundler.require(:default)
+  end
 
   def self.init_db
     ActiveRecord::Base.establish_connection(

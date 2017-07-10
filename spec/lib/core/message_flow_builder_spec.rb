@@ -2,10 +2,7 @@ require "core/message_flow_builder"
 
 RSpec.describe MessageFlowBuilder do
 
-  let(:builder) do
-    described_class.new(user, &scenario)
-  end
-
+  let(:builder) { described_class.new(user, &scenario) }
   let(:user) { create(:user, name: "John") }
 
   describe "DSL parsing" do

@@ -1,4 +1,5 @@
-require "factory_girl"
+require "bundler/setup"
+Bundler.require :default, :test
 
 RSpec.configure do |config|
 
