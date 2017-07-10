@@ -52,6 +52,7 @@ class MessageFlowBuilder
   def wrap_next_message_proc proc
     ->(user) do
       key = proc.call(user)
+      return nil unless key
       return messages[key] if messages.has_key?(key)
 
       raise RuntimeError, "#{key} is incorrect next message key"

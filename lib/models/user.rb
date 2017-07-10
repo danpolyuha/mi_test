@@ -6,8 +6,8 @@ class User < ActiveRecord::Base
     lines.create(text: line)
   end
 
-  def last_line
-    lines.last.text
+  def last_line_text
+    lines.last&.text
   end
 
 end
