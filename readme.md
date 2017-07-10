@@ -1,12 +1,14 @@
 # Test task for M. I. company
 
 During implememtation of this project, I was keeping in mind two important points I wanted to achieve:
-* structure of messages should me self-sufficient, meaning that a message object (representing a bot message in the chat) can decide where to pass execution by itself;
+* structure of messages should be self-sufficient, meaning that a message object (representing a bot message in the chat) can decide where to pass execution by itself;
 * DSL for building chat scenarios should be as compact as possible and, in the same time, fully functional, having possibility to describe everything scenario author needs.
 
-So, here is the result of my work.
+So, here is the result of my work. For to run the chatbot, type:
 
-The most important part from user perspective is DSL. Its consists of `message` methods with parameters describing desired behavior. Here is a small example:
+`ruby chatbot.rb`
+
+The most important part from user perspective is DSL. It consists of `message` methods with parameters describing desired behavior. Here is a small example:
 
 ```ruby
 ->{
@@ -27,7 +29,7 @@ The first argument to `message` is message key. It's needed for referencing.
 
 `reply_pattern` is regular expression showing how user can reply. If user's reply doesn't match it, bot tells user about it and asks to reply again. This parameter also can be a lambda with `user` parameter.
 
-`assigner` represents a field of `User` instance to which user's reply will be assigned. It also can be a lambda receiving to parameters: `user` and `value`.
+`assigner` represents a field of `User` instance to which user's reply will be assigned. It also can be a lambda receiving two parameters: `user` and `value`.
 
 The last agrument is `next_message`. It contains key of the next message in the conversation. Of course, it also can be a lambda receiving `User` instance.
 
