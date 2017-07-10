@@ -126,6 +126,21 @@ RSpec.describe MessageFlowBuilder do
       end
     end
 
+    context "when next_message proc returns wrong key" do
+      let(:scenario) { ->{
+        message :message1,
+                text: "hello",
+                next_message: ->(user){ :jack }
+
+        message :john,
+                text: "good bye"
+      }}
+
+      it "creates and correctly assigns next message" do
+        expect{builder.first_message.process_reply("hi").next_message}.to raise_error(RuntimeError)
+      end
+    end
+
   end
 
 end

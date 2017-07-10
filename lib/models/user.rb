@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
   end
 
   def last_line
-    lines.last
+    lines.last.text
   end
 
 end

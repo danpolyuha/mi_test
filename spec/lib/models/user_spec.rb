@@ -16,7 +16,7 @@ RSpec.describe User do
     it "returns last created line" do
       user.add_line("12345")
       user.add_line(text)
-      expect(user.last_line.text).to eq(text)
+      expect(user.last_line).to eq(text)
     end
   end
 

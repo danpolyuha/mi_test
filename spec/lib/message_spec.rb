@@ -56,7 +56,7 @@ RSpec.describe Message do
 
       it "adds message to user messages" do
         message.process_reply(name)
-        expect(user.last_line.text).to eq(name)
+        expect(user.last_line).to eq(name)
       end
 
       it "returns next message in flow" do
