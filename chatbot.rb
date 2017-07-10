@@ -1,2 +1,2 @@
 require_relative "lib/initializer"
-Initializer.new("matic")
+Initializer.go("matic")

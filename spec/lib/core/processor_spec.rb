@@ -1,4 +1,4 @@
-require "processor"
+require "core/processor"
 
 RSpec.describe Processor do
 

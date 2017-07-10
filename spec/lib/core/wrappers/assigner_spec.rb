@@ -1,4 +1,4 @@
-require "services/assigner"
+require "core/wrappers/assigner"
 
 RSpec.describe Assigner do
 

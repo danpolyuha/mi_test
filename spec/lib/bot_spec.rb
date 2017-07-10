@@ -1,14 +1,23 @@
 require "bot"
-require "scenarios/test"
+
+module Scenarios
+  def self.test
+    ->{
+      message :m1,
+              text: "hello",
+              assigner: :name
+    }
+  end
+end
 
 RSpec.describe Bot do
-  let(:bot) { Bot.new("test") }
+  let(:bot) do
+    bot = Bot.new("test")
+    expect(bot).to receive(:gets).and_return "Ringo"
+    bot
+  end
 
   describe "#talk" do
-
-    before do
-      expect(bot).to receive(:gets).and_return "Ringo"
-    end
 
     it "puts first message" do
       expect{bot.talk}.to output("hello\n").to_stdout

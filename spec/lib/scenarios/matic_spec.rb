@@ -1,5 +1,5 @@
 require "scenarios/matic"
-require "processor"
+require "core/processor"
 
 RSpec.describe "Matic scenario" do
 

@@ -1,5 +1,3 @@
-require "models/user"
-
 FactoryGirl.define do
 
   factory :user do

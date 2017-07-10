@@ -1,4 +1,4 @@
-require "services/caller"
+require "core/wrappers/caller"
 
 RSpec.describe Caller do
 

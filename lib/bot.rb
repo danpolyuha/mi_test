@@ -1,9 +1,9 @@
-require_relative "processor"
+require_relative "core/processor"
 
 class Bot
 
   def initialize scenario_name
-    scenario = resolve_scenario scenario_name
+    scenario = resolve_scenario(scenario_name)
     self.processor = Processor.new(scenario)
   end
 
@@ -21,7 +21,7 @@ class Bot
   attr_accessor :processor
 
   def resolve_scenario name
-    Scenarios.send name
+    Scenarios.send(name)
   end
 
   def normalize_reply string

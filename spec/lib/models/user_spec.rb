@@ -1,5 +1,3 @@
-require "models/user"
-
 RSpec.describe User do
 
   let(:user) { create(:user) }

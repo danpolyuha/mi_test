@@ -4,8 +4,9 @@ source "https://rubygems.org"
 gem "activerecord"
 gem "sqlite3"
 
-
 gem "rezult"
 
-gem "rspec"
-gem "factory_girl"
+group :test do
+  gem "rspec"
+  gem "factory_girl"
+end

@@ -1,4 +1,4 @@
-require "message_flow_builder"
+require "core/message_flow_builder"
 
 RSpec.describe MessageFlowBuilder do
 
@@ -52,7 +52,7 @@ RSpec.describe MessageFlowBuilder do
                 reply_pattern: ->(user) { /^Paul|#{user.name}$/ }
       }}
 
-      it "creates message with corresponding reply pattern" do
+      it "creates message that correctly resolves reply pattern" do
         expect(builder.first_message.process_reply("John").success?).to be_truthy
         expect(builder.first_message.process_reply("George").success?).to be_falsey
       end
@@ -77,7 +77,7 @@ RSpec.describe MessageFlowBuilder do
                 assigner: ->(user, reply) { user.name = reply }
       }}
 
-      it "assigns reply to corresponding attribute" do
+      it "calls proc to perform assigning" do
         expect{builder.first_message.process_reply("George")}.to change{user.name}.from("John").to("George")
       end
     end
@@ -120,7 +120,7 @@ RSpec.describe MessageFlowBuilder do
                 text: "good bye"
       }}
 
-      it "creates and correctly assigns next message" do
+      it "creates message that correctly resolved next message" do
         next_message = builder.first_message.process_reply("hi").next_message
         expect(next_message.get_text).to eq("good bye")
       end
@@ -136,7 +136,7 @@ RSpec.describe MessageFlowBuilder do
                 text: "good bye"
       }}
 
-      it "creates and correctly assigns next message" do
+      it "raises exception" do
         expect{builder.first_message.process_reply("hi").next_message}.to raise_error(RuntimeError)
       end
     end

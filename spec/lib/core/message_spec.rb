@@ -1,6 +1,6 @@
-require "message"
-require "services/caller"
-require "services/assigner"
+require "core/message"
+require "core/wrappers/caller"
+require "core/wrappers/assigner"
 
 RSpec.describe Message do
 

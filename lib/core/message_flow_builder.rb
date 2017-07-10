@@ -1,6 +1,6 @@
 require_relative "message"
-require_relative "services/caller"
-require_relative "services/assigner"
+require_relative "wrappers/caller"
+require_relative "wrappers/assigner"
 
 class MessageFlowBuilder
 
