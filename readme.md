@@ -4,9 +4,19 @@ During implememtation of this project, I was keeping in mind two important point
 * structure of messages should be self-sufficient, meaning that a message object (representing a bot message in the chat) can decide where to pass execution by itself;
 * DSL for building chat scenarios should be as compact as possible and, in the same time, fully functional, having possibility to describe everything scenario author needs.
 
-So, here is the result of my work. To run the chatbot, type:
+So, here is the result of my work.
 
-`ruby chatbot.rb`
+To prepare the environment, type:
+```shell
+gem install bundler
+bundle install
+```
+
+To run the chatbot, type:
+
+```shell
+ruby chatbot.rb
+```
 
 The most important part from user perspective is DSL. It consists of `message` methods with parameters describing desired behavior. Here is a small example:
 
