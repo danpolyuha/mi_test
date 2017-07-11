@@ -5,5 +5,6 @@ ActiveRecord::Base.establish_connection(
 
 require "db/schema"
 
+# load models
 current_dir = File.dirname(__FILE__)
 Dir[File.join(current_dir, "../lib/models/*.rb")].each {|file| require file }

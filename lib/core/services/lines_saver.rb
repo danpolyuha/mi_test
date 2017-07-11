@@ -5,17 +5,11 @@ class LinesSaver
   end
 
   def user_line text
-    if text
-      text = format_user_line(text)
-      user.add_line(text)
-    end
+    user.add_line(format_user_line(text)) if text
   end
 
   def bot_line text
-    if text
-      text = format_bot_line(text)
-      user.add_line(text)
-    end
+    user.add_line(format_bot_line(text)) if text
   end
 
   private

@@ -36,14 +36,16 @@ class Processor
 
   def process_reply text
     result = current_message.process_reply(text)
+    process_result(result)
+  end
+
+  def process_result result
     if result.success?
       self.current_message = result.next_message
-      bot_text = current_message&.get_text
+      current_message&.get_text
     else
-      bot_text = result.error_message
+      result.error_message
     end
-
-    bot_text
   end
 
   def lines_saver
