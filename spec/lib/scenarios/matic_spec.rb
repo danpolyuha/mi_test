@@ -12,7 +12,7 @@ RSpec.describe "Matic scenario" do
     end
 
     it "makes sure first reply is correct" do
-      expect(start_stage.reply("really?")).to eq('Provided reply can not be accepted. Please follow reply format: /\blet\'s talk\b/i')
+      expect(start_stage.reply("really?")).to eq('Provided reply can not be accepted. Please follow reply format: /^let\'s talk$/i')
     end
 
     let(:name_stage) { start_stage.tap{|processor| processor.reply("LET's taLK")} }
@@ -28,7 +28,7 @@ RSpec.describe "Matic scenario" do
     end
 
     it "makes sure contact method is correct" do
-      expect(contact_method_stage.reply("what about mind reading?")).to eq('Provided reply can not be accepted. Please follow reply format: /\bphone|email|i don\'t want to be contacted\b/i')
+      expect(contact_method_stage.reply("what about mind reading?")).to eq('Provided reply can not be accepted. Please follow reply format: /^phone|email|i don\'t want to be contacted$/i')
     end
 
     describe "tragic end" do
@@ -47,7 +47,7 @@ RSpec.describe "Matic scenario" do
       end
 
       it "makes sure email is correct" do
-        expect(email_stage.reply("12345")).to eq('Provided reply can not be accepted. Please follow reply format: /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i')
+        expect(email_stage.reply("12345")).to eq('Provided reply can not be accepted. Please follow reply format: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i')
       end
 
       let(:confirmation_stage) {
@@ -59,7 +59,7 @@ RSpec.describe "Matic scenario" do
       end
 
       it "makes sure answer to confirmation is correct" do
-        expect(confirmation_stage.reply("no, please don't!")).to eq('Provided reply can not be accepted. Please follow reply format: /\byes, please|sorry, wrong email\b/i')
+        expect(confirmation_stage.reply("no, please don't!")).to eq('Provided reply can not be accepted. Please follow reply format: /^yes, please|sorry, wrong email$/i')
       end
 
       let(:email_stage_again) { confirmation_stage.tap{|processor| processor.reply("sorry, wrong EMAIL")} }
@@ -81,7 +81,7 @@ RSpec.describe "Matic scenario" do
       end
 
       it "makes sure phone is correct" do
-        expect(phone_stage.reply("blabla")).to eq('Provided reply can not be accepted. Please follow reply format: /\b\+?\d+\b/')
+        expect(phone_stage.reply("blabla")).to eq('Provided reply can not be accepted. Please follow reply format: /^\+?\d+$/')
       end
 
       let(:contact_time_stage) { phone_stage.tap{|processor| processor.reply("+380987654321")} }
@@ -91,7 +91,7 @@ RSpec.describe "Matic scenario" do
       end
 
       it "makes sure contact time is correct" do
-        expect(contact_time_stage.reply("now!")).to eq('Provided reply can not be accepted. Please follow reply format: /\basap|morning|afternoon|evening\b/i')
+        expect(contact_time_stage.reply("now!")).to eq('Provided reply can not be accepted. Please follow reply format: /^asap|morning|afternoon|evening$/i')
       end
 
       let(:confirmation_stage) { contact_time_stage.tap{|processor| processor.reply("morning") } }
@@ -101,7 +101,7 @@ RSpec.describe "Matic scenario" do
       end
 
       it "makes sure answer to confirmation is correct" do
-        expect(confirmation_stage.reply("no, please don't!")).to eq('Provided reply can not be accepted. Please follow reply format: /\byes, please|sorry, wrong phone\b/i')
+        expect(confirmation_stage.reply("no, please don't!")).to eq('Provided reply can not be accepted. Please follow reply format: /^yes, please|sorry, wrong phone$/i')
       end
 
       let(:phone_stage_again) { confirmation_stage.tap{|processor| processor.reply("sorry, WRONG phone")} }
