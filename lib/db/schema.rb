@@ -1,3 +1,5 @@
+ActiveRecord::Schema.verbose = false
+
 ActiveRecord::Schema.define do
 
   create_table :users do |t|
